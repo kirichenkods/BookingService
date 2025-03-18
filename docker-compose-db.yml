@@ -1,0 +1,19 @@
+#docker-compose up
+version: "3.9"
+services:
+  postgres:
+    container_name: bookingPG
+    image: postgres
+    environment:
+      POSTGRES_DB: "booking_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "54321"
+    ports:
+      - "5432:5432"
+    networks:
+      java13-network:
+        aliases:
+          - booking_db
+networks:
+  java13-network:
+    name: 'our_booking_service_network'
