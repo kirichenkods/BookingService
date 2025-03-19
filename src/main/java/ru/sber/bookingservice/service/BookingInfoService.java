@@ -1,6 +1,7 @@
 package ru.sber.bookingservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sber.bookingservice.dto.BookingAcquireDTO;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class BookingInfoService {
     private final BookingInfoRepository repository;
     private final BookingInfoMapper bookingInfoMapper;
@@ -79,7 +81,9 @@ public class BookingInfoService {
                 dateEnd);
 
         if (count > 0) {
-            throw new ResourceUnavailableException("Ресурс занят в этот период");
+            String message = "Ресурс занят в этот период";
+            log.error(message);
+            throw new ResourceUnavailableException(message);
         }
     }
 
@@ -127,6 +131,10 @@ public class BookingInfoService {
      * @return Список свободных ресурсов.
      */
     public List<ResourceDTO> findFreeResourceBetweenDates(LocalDateTime dateStart, LocalDateTime dateEnd) {
+        if (dateEnd.isBefore(dateStart)) {
+            throw new IllegalArgumentException("Дата начала должна бронирования быть меньше даты конца");
+        }
+
         return resourceService.findAll().stream()
                 .filter(resource ->
                         repository.countByResourceAndDateStartBetween(resource, dateStart, dateEnd) < 1)
