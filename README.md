@@ -4,4 +4,6 @@
 (например http://localhost:8085/swagger-ui/index.html#/)
 
 схема базы данных:
-https://github.com/kirichenkods/BookingService/blob/main/src/main/resources/scheme_db.png
+![scheme](https://github.com/kirichenkods/BookingService/blob/main/src/main/resources/scheme_db.png)
+
+В папке resources находится скрипт создания таблиц базы данных.
