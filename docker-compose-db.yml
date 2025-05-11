@@ -11,9 +11,9 @@ services:
     ports:
       - "5432:5432"
     networks:
-      java13-network:
+      booking-network:
         aliases:
           - booking_db
 networks:
-  java13-network:
-    name: 'our_booking_service_network'
+  booking-network:
+    name: 'booking_service_network'
