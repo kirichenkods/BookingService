@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd">
+
+    <changeSet id="create-table-users_resources" author="kirichenkods">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="public" tableName="users_resources"/>
+            </not>
+        </preConditions>
+
+        <comment>Создание таблицы связи между пользователями и ресурсами</comment>
+        <createTable schemaName="public" tableName="users_resources">
+            <column name="id" type="serial4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_id" type="int4" remarks="ID ресурса"/>
+            <column name="user_id" type="int4" remarks="ID пользователя"/>
+            <column name="duration_type" type="varchar(10)" remarks="Тип продолжительности">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="int4" remarks="Продолжительность">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_start" type="timestamp" remarks="Дата начала">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_end" type="timestamp" remarks="Дата окончания">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-primary-key-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <primaryKeyExists primaryKeyName="users_resources_pkey"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey columnNames="id"
+                       constraintName="users_resources_pkey"
+                       schemaName="public"
+                       tableName="users_resources"/>
+    </changeSet>
+
+    <changeSet id="create-fk-resource-id-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="users_resources_resource_id_fkey"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="resource_id"
+                                 baseTableName="users_resources"
+                                 constraintName="users_resources_resource_id_fkey"
+                                 referencedColumnNames="id"
+                                 referencedTableSchemaName="public"
+                                 referencedTableName="resources"
+                                 deleteCascade="true"/>
+    </changeSet>
+
+    <changeSet id="create-fk-user-id-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="users_resources_user_id_fkey"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="users_resources"
+                                 constraintName="users_resources_user_id_fkey"
+                                 referencedColumnNames="id"
+                                 referencedTableSchemaName="public"
+                                 referencedTableName="users"
+                                 deleteCascade="true"/>
+    </changeSet>
+
+    <changeSet id="create-index-date-start-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_date_start"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_date_start"
+                     schemaName="public"
+                     tableName="users_resources"
+                     unique="false">
+            <column name="date_start"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="create-index-date-end-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_date_end"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_date_end"
+                     schemaName="public"
+                     tableName="users_resources"
+                     unique="false">
+            <column name="date_end"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="create-index-resource-id-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_resource_id"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_resource_id"
+                     schemaName="public"
+                     tableName="users_resources"
+                     unique="false">
+            <column name="resource_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="create-index-user-id-users_resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_user_id"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_user_id"
+                     schemaName="public"
+                     tableName="users_resources"
+                     unique="false">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

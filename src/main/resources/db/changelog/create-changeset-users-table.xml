@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd">
+
+    <changeSet id="create-table-users" author="kirichenkods">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="public" tableName="users"/>
+            </not>
+        </preConditions>
+
+        <comment>Создание таблицы с пользователями</comment>
+        <createTable schemaName="public" tableName="users">
+            <column name="id" type="serial4">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)" remarks="Имя пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(100)" remarks="Фамилия пользователя"/>
+            <column name="phone" type="varchar(20)" remarks="Номер телефона"/>
+            <column name="email" type="varchar(100)" remarks="Электронная почта"/>
+            <column name="login" type="varchar(20)" remarks="Логин пользователя">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="text" remarks="пароль"/>
+            <column name="role" type="varchar(20)" remarks="Роль пользователя">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-primary-key-users" author="kirichenkods">
+        <preConditions>
+            <not>
+                <primaryKeyExists primaryKeyName="users_pkey"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey columnNames="id"
+                       constraintName="users_pkey"
+                       schemaName="public"
+                       tableName="users"/>
+    </changeSet>
+
+    <changeSet id="create-unique-constraint-login-users" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="users_login_key"/>
+            </not>
+        </preConditions>
+        <comment>логин пользователя должен быть уникальным</comment>
+        <addUniqueConstraint columnNames="login"
+                             constraintName="users_login_key"
+                             schemaName="public"
+                             tableName="users"/>
+    </changeSet>
+
+    <changeSet id="create-unique-constraint-phone-email-users" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="users_phone_email_key"/>
+            </not>
+        </preConditions>
+        <comment>комбинация телефон + почта должна быть уникальной</comment>
+        <addUniqueConstraint columnNames="phone,email"
+                             constraintName="users_phone_email_key"
+                             schemaName="public"
+                             tableName="users"/>
+    </changeSet>
+
+    <changeSet id="create-index-login-users" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_users_login"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_users_login"
+                     schemaName="public"
+                     tableName="users"
+                     unique="false">
+            <column name="login"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

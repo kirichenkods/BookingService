@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd">
+
+    <changeSet id="create-table-resources" author="kirichenkods">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="public" tableName="resourses"/>
+            </not>
+        </preConditions>
+
+        <comment>Создание таблицы с ресурсами</comment>
+        <createTable schemaName="public" tableName="resources">
+            <column name="id" type="serial4">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(150)" remarks="Название ресурса">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="text" remarks="Описание ресурса"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-primary-key-resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <primaryKeyExists primaryKeyName="resources_pkey"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey columnNames="id"
+                       constraintName="resources_pkey"
+                       schemaName="public"
+                       tableName="resources"/>
+    </changeSet>
+
+    <changeSet id="create-unique-constraint-name-resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="resources_name_key"/>
+            </not>
+        </preConditions>
+        <comment>имя ресурса должно быть уникальным</comment>
+        <addUniqueConstraint columnNames="name"
+                             constraintName="resources_name_key"
+                             schemaName="public"
+                             tableName="resources"/>
+
+    </changeSet>
+
+    <changeSet id="create-index-name-resources" author="kirichenkods">
+        <preConditions>
+            <not>
+                <indexExists indexName="idx_resources_name"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="idx_resources_name"
+                     schemaName="public"
+                     tableName="resources"
+                     unique="false">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
